@@ -59,12 +59,15 @@ const createRecipe = async (req, res) => {
     const uploadedImage = await cloudinary.uploader.upload(previewSource, {
       upload_preset: "ml_default",
     });
-    const image = uploadedImage.secure_url;
+    console.log(uploadedImage);
+    const image_secure_url = uploadedImage.secure_url;
+    const image_public_id = uploadedImage.public_id;
     const recipe = await Recipe.create({
       title,
       ingredients: cleanIngredients,
       instructions: cleanInstructions,
-      image,
+      image_secure_url,
+      image_public_id,
     });
     res.status(200).json(recipe);
   } catch (error) {

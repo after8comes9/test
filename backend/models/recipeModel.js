@@ -16,7 +16,11 @@ const recipeSchema = new Schema(
       type: Array,
       required: true,
     },
-    image: {
+    image_secure_url: {
+      type: String,
+      required: true,
+    },
+    image_public_id: {
       type: String,
       required: true,
     },

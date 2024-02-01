@@ -22,7 +22,7 @@ const RecipeDetails = ({ recipe }) => {
   return (
     <div className="recipe-details">
       <div className="coverImage">
-        <img src={recipe.image} alt="recipe" />
+        <img src={recipe.image_secure_url} alt="recipe" />
       </div>
       <h4>{recipe.title}</h4>
       <strong>Ingredients: </strong>
