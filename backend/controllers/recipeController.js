@@ -84,6 +84,7 @@ const deleteRecipe = async (req, res) => {
   }
 
   const recipe = await Recipe.findOneAndDelete({ _id: id });
+  await cloudinary.uploader.destroy(recipe.image_public_id);
 
   if (!recipe) {
     return res.status(400).json({ error: "No such recipe" });
