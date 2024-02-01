@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 const RecipeDetails = ({ recipe }) => {
   const { dispatch } = useRecipesContext();
 
-  const handleClick = async () => {
+  const handleClickDelete = async () => {
     const response = await fetch(
       "http://localhost:4000/api/recipes/" + recipe._id,
       {
@@ -18,6 +18,8 @@ const RecipeDetails = ({ recipe }) => {
       dispatch({ type: "DELETE_RECIPE", payload: json });
     }
   };
+
+  const handleClickEdit = async () => {};
 
   return (
     <div className="recipe-details">
@@ -43,8 +45,17 @@ const RecipeDetails = ({ recipe }) => {
         added&nbsp;
         {formatDistanceToNow(new Date(recipe.createdAt), { addSuffix: true })}
       </p>
-      <span className="material-symbols-outlined" onClick={handleClick}>
+      <span
+        className="material-symbols-outlined delete"
+        onClick={handleClickDelete}
+      >
         delete
+      </span>
+      <span
+        className="material-symbols-outlined edit"
+        onClick={handleClickEdit}
+      >
+        edit
       </span>
     </div>
   );

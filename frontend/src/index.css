@@ -60,7 +60,7 @@ header a {
   font-size: 0.9em;
   color: #555;
 }
-.recipe-details span {
+.recipe-details .delete {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -70,7 +70,16 @@ header a {
   border-radius: 50%;
   color: #333;
 }
-
+.recipe-details .edit {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  cursor: pointer;
+  background: #f1f1f1;
+  padding: 6px;
+  border-radius: 50%;
+  color: #333;
+}
 /* new recipe form */
 
 input {
