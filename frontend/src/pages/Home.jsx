@@ -8,6 +8,7 @@ import RecipeForm from "../components/RecipeForm";
 const Home = () => {
   const { recipes, dispatch } = useRecipesContext();
   const [addRecipe, setAddRecipe] = useState(false);
+  const [formData, setFormData] = useState();
 
   function toggleForm() {
     setAddRecipe((addRecipe) => !addRecipe);
@@ -32,7 +33,12 @@ const Home = () => {
         <div className="recipes">
           {recipes &&
             recipes.map((recipe) => (
-              <RecipeDetails recipe={recipe} key={recipe._id} />
+              <RecipeDetails
+                toggleForm={toggleForm}
+                recipe={recipe}
+                key={recipe._id}
+                passDataToForm={(formData) => setFormData(formData)}
+              />
             ))}
           <div onClick={toggleForm}>
             <span className="material-symbols-outlined">add</span>
@@ -40,7 +46,13 @@ const Home = () => {
           </div>
         </div>
       )}
-      {addRecipe && <RecipeForm toggleForm={toggleForm} />}
+      {addRecipe && (
+        <RecipeForm
+          recipe={formData}
+          toggleForm={toggleForm}
+          passDataToForm={(formData) => setFormData(formData)}
+        />
+      )}
     </div>
   );
 };

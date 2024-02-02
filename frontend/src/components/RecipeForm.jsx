@@ -6,10 +6,16 @@ const RecipeForm = (props) => {
   const { dispatch } = useRecipesContext();
 
   const initialState = [""];
+  const ingredientsToEdit = props.recipe.ingredients;
+  const instructionsToEdit = props.recipe.instructions;
 
   const [title, setTitle] = useState("");
-  const [ingredients, setIngredients] = useState(initialState);
-  const [instructions, setInstructions] = useState(initialState);
+  const [ingredients, setIngredients] = useState(
+    ingredientsToEdit || initialState,
+  );
+  const [instructions, setInstructions] = useState(
+    instructionsToEdit || initialState,
+  );
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
   const [fileInputState, setFileInputState] = useState("");
@@ -45,6 +51,7 @@ const RecipeForm = (props) => {
 
   const handleCancel = (e) => {
     e.preventDefault();
+    props.passDataToForm("");
     props.toggleForm();
   };
 
@@ -104,12 +111,13 @@ const RecipeForm = (props) => {
 
   return (
     <form className="create" onSubmit={handleSubmit}>
-      <h3>Add a New Recipe</h3>
+      {!props.recipe.title && <h3>Add a New Recipe</h3>}
+      {props.recipe.title && <h3>Edit Recipe</h3>}
       <label>Recipe Title:</label>
       <input
         type="text"
         onChange={(e) => setTitle(e.target.value)}
-        value={title}
+        value={props.recipe.title || title}
         className={emptyFields.includes("title") ? "error" : ""}
       />
       <label>Ingredients:</label>
@@ -192,6 +200,13 @@ const RecipeForm = (props) => {
       />
       {previewSource && (
         <img src={previewSource} alt="chosen" style={{ height: "300px" }} />
+      )}
+      {props.recipe.image_secure_url && (
+        <img
+          src={props.recipe.image_secure_url}
+          alt="chosen"
+          style={{ height: "300px" }}
+        />
       )}
       <button className="save">Save Recipe</button>
       <button className="cancel" onClick={handleCancel}>

@@ -2,7 +2,7 @@ import { useRecipesContext } from "../hooks/useRecipesContext";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import PropTypes from "prop-types";
 
-const RecipeDetails = ({ recipe }) => {
+const RecipeDetails = ({ recipe, passDataToForm, toggleForm }) => {
   const { dispatch } = useRecipesContext();
 
   const handleClickDelete = async () => {
@@ -19,7 +19,10 @@ const RecipeDetails = ({ recipe }) => {
     }
   };
 
-  const handleClickEdit = async () => {};
+  let handleEdit = () => {
+    passDataToForm(recipe);
+    toggleForm();
+  };
 
   return (
     <div className="recipe-details">
@@ -51,10 +54,7 @@ const RecipeDetails = ({ recipe }) => {
       >
         delete
       </span>
-      <span
-        className="material-symbols-outlined edit"
-        onClick={handleClickEdit}
-      >
+      <span className="material-symbols-outlined edit" onClick={handleEdit}>
         edit
       </span>
     </div>
