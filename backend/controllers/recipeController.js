@@ -96,23 +96,65 @@ const deleteRecipe = async (req, res) => {
 // update a recipe
 const updateRecipe = async (req, res) => {
   const { id } = req.params;
+  const { title, ingredients, instructions, previewSource } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such recipe" });
   }
 
-  const recipe = await Recipe.findOneAndUpdate(
-    { _id: id },
-    {
-      ...req.body,
-    },
-  );
+  // remove any empty fields in ingredients and instructions
+  let cleanIngredients = ingredients.filter((str) => /\w+/.test(str));
+  let cleanInstructions = instructions.filter((str) => /\w+/.test(str));
 
-  if (!recipe) {
-    return res.status(400).json({ error: "No such recipe" });
+  let emptyFields = [];
+
+  if (!title) {
+    emptyFields.push("title");
+  }
+  if (cleanIngredients.length === 0) {
+    emptyFields.push("ingredients");
+  }
+  if (cleanInstructions.length === 0) {
+    emptyFields.push("instructions");
+  }
+  if (!previewSource) {
+    emptyFields.push("previewSource");
+  }
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all fields", emptyFields });
   }
 
-  res.status(200).json(recipe);
+  // add to the database
+  try {
+    const uploadedImage = await cloudinary.uploader.upload(previewSource, {
+      upload_preset: "ml_default",
+    });
+    const options = { returnDocument: "after" };
+    console.log(uploadedImage);
+    const image_secure_url = uploadedImage.secure_url;
+    const image_public_id = uploadedImage.public_id;
+    const recipe = await Recipe.findOneAndUpdate(
+      { _id: id },
+      {
+        title,
+        ingredients: cleanIngredients,
+        instructions: cleanInstructions,
+        image_secure_url,
+        image_public_id,
+      },
+      { returnDocument: "after" },
+    );
+
+    if (!recipe) {
+      return res.status(400).json({ error: "No such recipe" });
+    }
+
+    res.status(200).json(recipe);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 module.exports = {

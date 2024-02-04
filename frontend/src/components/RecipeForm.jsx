@@ -47,6 +47,32 @@ const RecipeForm = (props) => {
     }
   };
 
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+
+    const recipe = { title, ingredients, instructions, previewSource };
+
+    const response = await fetch(
+      "http://localhost:4000/api/recipes/" + props.id,
+      {
+        method: "PATCH",
+        body: JSON.stringify(recipe),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const json = await response.json();
+    if (!response.ok) {
+      setError(json.error);
+      setEmptyFields(json.emptyFields);
+    }
+    if (response.ok) {
+      dispatch({ type: "UPDATE_RECIPE", payload: json });
+      props.toggleForm();
+    }
+  };
+
   const handleCancel = (e) => {
     e.preventDefault();
     props.toggleForm();
@@ -107,7 +133,10 @@ const RecipeForm = (props) => {
   };
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
+    <form
+      className="create"
+      onSubmit={!props.title ? handleSubmit : handleUpdate}
+    >
       {!props.title && <h3>Add a New Recipe</h3>}
       {props.title && <h3>Edit Recipe</h3>}
 
@@ -230,6 +259,7 @@ RecipeForm.propTypes = {
   ingredients: PropTypes.any,
   instructions: PropTypes.any,
   image: PropTypes.any,
+  id: PropTypes.any,
 };
 
 export default RecipeForm;

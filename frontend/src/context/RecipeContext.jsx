@@ -13,6 +13,13 @@ export const recipesReducer = (state, action) => {
       return {
         recipes: [action.payload, ...state.recipes],
       };
+    case "UPDATE_RECIPE":
+      return {
+        recipes: state.recipes.map((item) =>
+          item._id === action.payload._id ? action.payload : item,
+        ),
+      };
+
     case "DELETE_RECIPE":
       return {
         recipes: state.recipes.filter((r) => r._id !== action.payload._id),

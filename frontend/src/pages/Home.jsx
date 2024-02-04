@@ -49,6 +49,7 @@ const Home = () => {
       )}
       {addRecipe && (
         <RecipeForm
+          id={recipeFocus._id}
           title={recipeFocus.title}
           ingredients={recipeFocus.ingredients}
           instructions={recipeFocus.instructions}
