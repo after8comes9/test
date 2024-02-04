@@ -7,13 +7,17 @@ const RecipeForm = (props) => {
 
   const initialState = [""];
 
-  const [title, setTitle] = useState("");
-  const [ingredients, setIngredients] = useState(initialState);
-  const [instructions, setInstructions] = useState(initialState);
+  const [title, setTitle] = useState(props.title || "");
+  const [ingredients, setIngredients] = useState(
+    props.ingredients || initialState,
+  );
+  const [instructions, setInstructions] = useState(
+    props.instructions || initialState,
+  );
   const [error, setError] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
   const [fileInputState, setFileInputState] = useState("");
-  const [previewSource, setPreviewSource] = useState();
+  const [previewSource, setPreviewSource] = useState(props.image || "");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,7 +108,9 @@ const RecipeForm = (props) => {
 
   return (
     <form className="create" onSubmit={handleSubmit}>
-      <h3>Add a New Recipe</h3>
+      {!props.title && <h3>Add a New Recipe</h3>}
+      {props.title && <h3>Edit Recipe</h3>}
+
       <label>Recipe Title:</label>
       <input
         type="text"
@@ -183,15 +189,36 @@ const RecipeForm = (props) => {
         <span className="material-symbols-outlined">add</span>
         <p className="addText">add a step</p>
       </div>
+      <label>Image:</label>
+
+      {!previewSource && (
+        <label
+          htmlFor="imageUpload"
+          style={{ background: "grey", padding: "5px 10px" }}
+        >
+          Add an image
+        </label>
+      )}
+
       <input
+        id="imageUpload"
         type="file"
         name="image"
+        style={{ visibility: "hidden" }}
         onChange={handleFileInputChange}
         value={fileInputState}
         className={emptyFields.includes("previewSource") ? "error" : ""}
       />
       {previewSource && (
-        <img src={previewSource} alt="chosen" style={{ height: "300px" }} />
+        <>
+          <img src={previewSource} alt="chosen" style={{ height: "300px" }} />
+          <label
+            htmlFor="imageUpload"
+            style={{ background: "grey", padding: "5px 10px" }}
+          >
+            Change the image
+          </label>
+        </>
       )}
       <button className="save">Save Recipe</button>
       <button className="cancel" onClick={handleCancel}>
@@ -204,6 +231,10 @@ const RecipeForm = (props) => {
 
 RecipeForm.propTypes = {
   toggleForm: PropTypes.any,
+  title: PropTypes.any,
+  ingredients: PropTypes.any,
+  instructions: PropTypes.any,
+  image: PropTypes.any,
 };
 
 export default RecipeForm;

@@ -8,9 +8,11 @@ import RecipeForm from "../components/RecipeForm";
 const Home = () => {
   const { recipes, dispatch } = useRecipesContext();
   const [addRecipe, setAddRecipe] = useState(false);
+  const [recipeFocus, setRecipeFocus] = useState("");
 
   function toggleForm() {
     setAddRecipe((addRecipe) => !addRecipe);
+    setRecipeFocus((recipeFocus) => !recipeFocus);
   }
 
   useEffect(() => {
@@ -32,7 +34,12 @@ const Home = () => {
         <div className="recipes">
           {recipes &&
             recipes.map((recipe) => (
-              <RecipeDetails recipe={recipe} key={recipe._id} />
+              <RecipeDetails
+                toggleForm={toggleForm}
+                recipe={recipe}
+                key={recipe._id}
+                getSelectedKey={(key) => setRecipeFocus(key)}
+              />
             ))}
           <div onClick={toggleForm}>
             <span className="material-symbols-outlined">add</span>
@@ -40,7 +47,15 @@ const Home = () => {
           </div>
         </div>
       )}
-      {addRecipe && <RecipeForm toggleForm={toggleForm} />}
+      {addRecipe && (
+        <RecipeForm
+          title={recipeFocus.title}
+          ingredients={recipeFocus.ingredients}
+          instructions={recipeFocus.instructions}
+          image={recipeFocus.image_secure_url}
+          toggleForm={toggleForm}
+        />
+      )}
     </div>
   );
 };
