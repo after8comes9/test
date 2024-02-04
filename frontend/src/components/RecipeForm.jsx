@@ -190,36 +190,31 @@ const RecipeForm = (props) => {
         <p className="addText">add a step</p>
       </div>
       <label>Image:</label>
-
+      <br />
+      {previewSource && (
+        <>
+          <img src={previewSource} alt="chosen" style={{ height: "300px" }} />
+          <label className="addListItem" htmlFor="imageUpload">
+            <span className="material-symbols-outlined">add</span>
+            <p className="addText">Change the image</p>
+          </label>
+        </>
+      )}
       {!previewSource && (
-        <label
-          htmlFor="imageUpload"
-          style={{ background: "grey", padding: "5px 10px" }}
-        >
-          Add an image
+        <label className="addListItem" htmlFor="imageUpload">
+          <span className="material-symbols-outlined">add</span>
+          <p className="addText">Upload an image</p>
         </label>
       )}
-
       <input
         id="imageUpload"
         type="file"
         name="image"
         style={{ visibility: "hidden" }}
         onChange={handleFileInputChange}
-        value={fileInputState}
+        value={fileInputState || ""}
         className={emptyFields.includes("previewSource") ? "error" : ""}
       />
-      {previewSource && (
-        <>
-          <img src={previewSource} alt="chosen" style={{ height: "300px" }} />
-          <label
-            htmlFor="imageUpload"
-            style={{ background: "grey", padding: "5px 10px" }}
-          >
-            Change the image
-          </label>
-        </>
-      )}
       <button className="save">Save Recipe</button>
       <button className="cancel" onClick={handleCancel}>
         Cancel
